@@ -17,6 +17,16 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+            condition.cpp
+            condition.h
+            simulation.cpp
+            simulation.h
+            temperature.cpp
+            temperature.h
+            humidity.cpp
+            humidity.h
+            concentrationco2.cpp
+            concentrationco2.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
