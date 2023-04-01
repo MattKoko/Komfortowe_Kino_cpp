@@ -1,3 +1,10 @@
+/** @file humidity.cpp
+ *  @brief implementation of Humidity class's method.
+ *
+ *  @author Mateusz Kokoszka
+ *  @bug No known bugs.
+ */
+
 #include "humidity.h"
 
 void Humidity::calcualteValue(double tempIn, double humIn, double tempOut, double humOut, double humConst1, bool ventStatus, double peopleInside) {

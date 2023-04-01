@@ -1,11 +1,15 @@
+/** @file mainwindow.cpp
+ *  @brief implementation of MainWindow class.
+ *
+ *  @author Mateusz Kokoszka
+ *  @bug No known bugs.
+ */
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "simulation.h"
 #include <QLineEdit>
 #include <QRadioButton>
-
-#include <chrono>
-#include <thread>
 #define _GLIBCXX_USE_CXX11_ABI 1
 
 MainWindow::MainWindow(QWidget *parent)
@@ -28,9 +32,9 @@ void MainWindow::on_pushButton_clicked()
     double temp_out = getDoubleFromQLineEdit(ui->tempOutEdit); // temperatura zewnętrzna w stopniach Celsjusza
     double co2_out = getDoubleFromQLineEdit(ui->concCO2OutEdit); // stężenie CO2 zewnęterzna w ppm
     double hum_out = getDoubleFromQLineEdit(ui->HumiOutEdit); // wilgotność zewnęterzna w procentach
-    bool ventOnOff = getRadioButtonChecked(ui->ventilationRadioButton);
-    double peopleInside = getDoubleFromQLineEdit(ui->PeopleCountInEdit);
-    double simulationTime = getDoubleFromQLineEdit(ui->simulationTimeEdit);
+    bool ventOnOff = getRadioButtonChecked(ui->ventilationRadioButton); // status wlaczony/wylaczony systemu wentylacji
+    double peopleInside = getDoubleFromQLineEdit(ui->PeopleCountInEdit); // ilosc osob w pomieszczeniu kina
+    double simulationTime = getDoubleFromQLineEdit(ui->simulationTimeEdit); // czas symulacji podany w minutach
 
     Simulation simulation(temp_in, co2_in, hum_in, temp_out, co2_out, hum_out, ventOnOff, peopleInside);
     simulation.recalculateConditions(simulationTime, ui->listWidgetSimulationOutput);

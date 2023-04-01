@@ -1,3 +1,10 @@
+/** @file main.cpp
+ *  @brief implementation of main method.
+ *
+ *  @author Mateusz Kokoszka
+ *  @bug No known bugs.
+ */
+
 #include "mainwindow.h"
 
 #include <QApplication>

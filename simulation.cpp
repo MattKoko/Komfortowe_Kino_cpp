@@ -1,3 +1,10 @@
+/** @file simulation.cpp
+ *  @brief implementation of Simulation class and its methods.
+ *
+ *  @author Mateusz Kokoszka
+ *  @bug No known bugs.
+ */
+
 #include "simulation.h"
 #include "temperature.h"
 #include "humidity.h"
@@ -39,7 +46,7 @@ void Simulation::recalculateConditions(int timeOfSimulationInSeconds, QListWidge
 
     string infoOutpout = "";
 
-    for(int i = 1; i <= timeOfSimulationInSeconds; i++) {
+    for(int i = 1; i <= timeOfSimulationInMinutes; i++) {
         Temperature temp;
         temp.calcualteValue(newTemp, tempOUT, tempConst, ventStatus, peopleInside);
         newTemp = temp.getConditionValue();
@@ -53,7 +60,7 @@ void Simulation::recalculateConditions(int timeOfSimulationInSeconds, QListWidge
         newHumi = humi.getConditionValue();
 
         ostringstream oss;
-        bool isThisLastIteration = i == timeOfSimulationInSeconds;
+        bool isThisLastIteration = (i == timeOfSimulationInMinutes);
         if(isThisLastIteration) oss << "---Wartości dla ostatniej iteracji symulacji---\n";
         oss << "Warunki wewnetrzne kina dla: " << i << " minuty symulacji: \n";
         oss << "    - temperatura: " << newTemp << " C \n";

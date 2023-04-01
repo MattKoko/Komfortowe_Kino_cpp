@@ -1,3 +1,10 @@
+/** @file temperature.cpp
+ *  @brief implementation of Temperature class's method.
+ *
+ *  @author Mateusz Kokoszka
+ *  @bug No known bugs.
+ */
+
 #include "temperature.h"
 #include "condition.h"
 

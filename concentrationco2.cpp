@@ -1,3 +1,10 @@
+/** @file concentrationco2.cpp
+ *  @brief implementation of ConcentrationCO2 class's method.
+ *
+ *  @author Mateusz Kokoszka
+ *  @bug No known bugs.
+ */
+
 #include "concentrationco2.h"
 
 void ConcentrationCO2::calcualteValue(double tempIn, double concCO2In, double humIn, double co2Const1, double co2Const2, bool ventStatus, double peopleInside) {
