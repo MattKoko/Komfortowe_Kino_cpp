@@ -6,6 +6,10 @@
 #include <chrono>
 #include <thread>
 #include <ctime>
+#include <string>
+#include <sstream>
+#include <QLabel>
+#include <QListView>
 using namespace std;
 
 Simulation::Simulation(double tIN,
@@ -26,12 +30,16 @@ Simulation::Simulation(double tIN,
     peopleInside = pplInside;
 }
 
-void Simulation::recalculateConditions(int timeOfSimulationInSeconds) {
+void Simulation::recalculateConditions(int timeOfSimulationInSeconds, QListWidget* outputList) {
     double newTemp = tempIN;
     double newConcCO2 = concCO2IN;
     double newHumi = humiIN;
 
-    for(int i = 0; i < timeOfSimulationInSeconds; i++) {
+    outputList->clear();
+
+    string infoOutpout = "";
+
+    for(int i = 1; i <= timeOfSimulationInSeconds; i++) {
         Temperature temp;
         temp.calcualteValue(newTemp, tempOUT, tempConst, ventStatus, peopleInside);
         newTemp = temp.getConditionValue();
@@ -44,16 +52,24 @@ void Simulation::recalculateConditions(int timeOfSimulationInSeconds) {
         humi.calcualteValue(newTemp, newHumi, tempOUT, humiOUT, humConst1, ventStatus, peopleInside);
         newHumi = humi.getConditionValue();
 
-        cout << "Temperatura wewnetrzna: " << newTemp << " stopni Celsjusza" << endl;
-        cout << "Stezenie CO2 wewnetrzne: " << newConcCO2 << " ppm" << endl;
-        cout << "Wilgotnosc wewnetrzna: " << newHumi << " %" << endl;
+        ostringstream oss;
+        bool isThisLastIteration = i == timeOfSimulationInSeconds;
+        if(isThisLastIteration) oss << "---Wartości dla ostatniej iteracji symulacji---\n";
+        oss << "Warunki wewnetrzne kina dla: " << i << " minuty symulacji: \n";
+        oss << "    - temperatura: " << newTemp << " C \n";
+        oss << "    - stezenie CO2: " << newConcCO2 << " ppm \n";
+        oss << "    - wilgotnosc: " << newHumi << " % \n";
+        if(isThisLastIteration) {
+            oss << "-----------------------------------------------\n";
+        } else {
+            oss << "\n\n";
+        }
+        infoOutpout += oss.str();
 
-        time_t now = time(0);
-        char* currentTime = ctime(&now);
-        cout << "--- Aktualny czas: " << currentTime << std::endl;
-
-        this_thread::sleep_for(std::chrono::milliseconds(timeIterationInMiliseconds));
     }
+
+    outputList->addItem(QString::fromStdString(infoOutpout));
+    outputList->scrollToBottom();
 }
 
 
