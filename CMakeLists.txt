@@ -27,6 +27,12 @@ set(PROJECT_SOURCES
             humidity.h
             concentrationco2.cpp
             concentrationco2.h
+            room.cpp
+            room.h
+            controlpanel.cpp
+            controlpanel.h
+            cinema.cpp
+            cinema.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

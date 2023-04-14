@@ -9,6 +9,7 @@
 #include "temperature.h"
 #include "humidity.h"
 #include "concentrationco2.h"
+
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -19,64 +20,41 @@
 #include <QListView>
 using namespace std;
 
-Simulation::Simulation(double tIN,
-                       double cIN,
-                       double hIN,
-                       double tOUT,
-                       double cOUT,
-                       double hOUT,
-                       bool ventOnOff,\
-                       double pplInside) {
-    tempIN = tIN;
-    concCO2IN = cIN;
-    humiIN = hIN;
-    tempOUT = tOUT;
-    concCO2OUT = cOUT;
-    humiOUT = hOUT;
-    ventStatus = ventOnOff;
-    peopleInside = pplInside;
-}
+Simulation::Simulation() {}
 
-void Simulation::recalculateConditions(int timeOfSimulationInSeconds, QListWidget* outputList) {
-    double newTemp = tempIN;
-    double newConcCO2 = concCO2IN;
-    double newHumi = humiIN;
-
+void Simulation::recalculateConditions(Room room, int timeOfSimulationInMinutes, QListWidget* outputList) {
+    //Clear GUI from previous calucations
     outputList->clear();
 
     string infoOutpout = "";
 
     for(int i = 1; i <= timeOfSimulationInMinutes; i++) {
-        Temperature temp;
-        temp.calcualteValue(newTemp, tempOUT, tempConst, ventStatus, peopleInside);
-        newTemp = temp.getConditionValue();
+        bool ventilationStatus = room.getControlPanel().getVentilationStatus();
+        bool numberOfPeopleInside = room.getControlPanel().getNumberOfPeopleInside();
 
-        ConcentrationCO2 conc;
-        conc.calcualteValue(newTemp, newConcCO2, newHumi, co2Const1, co2Const2, ventStatus, peopleInside);
-        newConcCO2 = conc.getConditionValue();
+        //Recalcualte all conditions in the room
+        room.recalculateInsideTemperature(tempConst, ventilationStatus, numberOfPeopleInside);
+        room.recalculateInsideConcentrationCO2(co2Const1, co2Const2, ventilationStatus, numberOfPeopleInside);
+        room.recalculateInsideHumidity(humConst1, ventilationStatus, numberOfPeopleInside);
 
-        Humidity humi;
-        humi.calcualteValue(newTemp, newHumi, tempOUT, humiOUT, humConst1, ventStatus, peopleInside);
-        newHumi = humi.getConditionValue();
-
+        //Prepare data to be printed on GUI
         ostringstream oss;
         bool isThisLastIteration = (i == timeOfSimulationInMinutes);
         if(isThisLastIteration) oss << "---Wartości dla ostatniej iteracji symulacji---\n";
         oss << "Warunki wewnetrzne kina dla: " << i << " minuty symulacji: \n";
-        oss << "    - temperatura: " << newTemp << " C \n";
-        oss << "    - stezenie CO2: " << newConcCO2 << " ppm \n";
-        oss << "    - wilgotnosc: " << newHumi << " % \n";
+        oss << "    - temperatura: " << room.getTempInside().getConditionValue() << " " << room.getTempInside().getConditionUnit() << " \n";
+        oss << "    - stezenie CO2: " << room.getCO2Inside().getConditionValue() << " " << room.getCO2Inside().getConditionUnit() << " \n";
+        oss << "    - wilgotnosc: " << room.getHumInside().getConditionValue() << " " << room.getHumInside().getConditionUnit() << " \n";
         if(isThisLastIteration) {
             oss << "-----------------------------------------------\n";
+            oss << " Obliczenia przeprowadzono dla sali kinowej o nazwie: " << room.getRoomName() << " \n";
         } else {
             oss << "\n\n";
         }
         infoOutpout += oss.str();
-
     }
 
+    //Print output of calculation on GUI
     outputList->addItem(QString::fromStdString(infoOutpout));
     outputList->scrollToBottom();
 }
-
-
